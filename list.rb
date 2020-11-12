@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'pry'
 class Node
   attr_accessor :value, :next_node
@@ -26,7 +28,7 @@ class LinkedList
   end
 
   def prepend(value)
-    @size+=1
+    @size += 1
     if @head.value.nil?
       @head.value = value
     else
@@ -37,45 +39,43 @@ class LinkedList
   # size, head and tail don't need read methods as I've made them readable.
 
   def at(index)
-    "Not enough nodes" if index >= @size
+    'Not enough nodes' if index >= @size
     i = 0
     temp = @head
-    while i < index do
+    while i < index
       temp = temp.next_node
-      i+=1
+      i += 1
     end
     temp.value
   end
 
   def pop
-    @size -=1
+    @size -= 1
     temp = @head
-    until temp.next_node == @tail
-      temp = temp.next_node
-    end
+    temp = temp.next_node until temp.next_node == @tail
     @tail = nil
     @tail = temp
   end
 
-  def contains? value
+  def contains?(value)
     temp = @head
     i = 0
     while i < @size
       return true if temp.value == value
 
       temp = temp.next_node
-      i+=1
+      i += 1
     end
   end
 
-  def find value
+  def find(value)
     temp = @head
     i = 0
     while i < @size
       return i if temp.value == value
 
       temp = temp.next_node
-      i+=1
+      i += 1
     end
     nil
   end
@@ -87,13 +87,42 @@ class LinkedList
     while i < @size
       string += "( #{temp.value} ) -> "
       temp = temp.next_node
-      i+=1
+      i += 1
     end
     puts "#{string}nil"
   end
+
+  # extra credit!
+
+  def insert_at(value, index)
+    temp = @head
+    i = 0
+    prepend(value) if index.zero?
+    while i < @size
+      if index - 1 == i
+        newnode = Node.new(value, temp.next_node)
+        temp.next_node = newnode
+        @size += 1
+      end
+      temp = temp.next_node
+      i += 1
+    end
+  end
+
+  def remove_at(index)
+    @size -= 1
+    temp = @head
+    i = 0
+    @head = temp.next_node if index.zero?
+    while i < @size
+      temp.next_node = temp.next_node.next_node if index - 1 == i
+      temp = temp.next_node
+      i += 1
+    end
+  end
 end
 
-howdy = LinkedList.new()
+howdy = LinkedList.new
 howdy.append('balling')
 howdy.append(17)
 howdy.prepend('Cutting!')
@@ -104,6 +133,8 @@ howdy.prepend(3)
 howdy.prepend('neh')
 puts howdy.find('balling')
 puts howdy.contains? 3
-
+howdy.to_s
+howdy.insert_at 'hi', 3
+howdy.remove_at 0
 
 howdy.to_s
